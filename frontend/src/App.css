@@ -1,13 +1,13 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
 }
 
 .logo {
   height: 6em;
-  padding: 1.5em;
+  padding: 0;
   will-change: filter;
   transition: filter 300ms;
 }
@@ -38,5 +38,6 @@
 }
 
 .read-the-docs {
-  color: #888;
+  color: #210000;
 }
+

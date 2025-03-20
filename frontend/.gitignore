@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Logs
 logs
 *.log
@@ -22,3 +23,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+=======
+>>>>>>> f85522fbd931dbff16ea181ac90af66287ab2fba
+backend/src/config/firebaseConfig.json

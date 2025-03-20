@@ -8,7 +8,8 @@ const verificarToken = async (req, res, next) => {
   if (!token) {
     return res.status(401).json({ error: "No autorizado" });
   }
-
+  
+  console.log("🔥 Firebase Auth:", auth);
   try {
     const decodedToken = await auth.verifyIdToken(token);
     req.user = decodedToken;

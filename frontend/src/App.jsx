@@ -1,26 +1,31 @@
+// frontend/src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import Menu from "./pages/Menu";
 import Login from "./pages/Login";
-import Registro from "./pages/Registro";
-import { CarritoProvider } from "./context/CarritoContext";  // Importamos el proveedor del carrito
+import Dashboard from "./pages/Dashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
-    <CarritoProvider> {/* Envolvemos todo dentro del proveedor */}
+    <AuthProvider>
       <Router>
-        <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/menu" element={<Menu />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/registro" element={<Registro />} />
+          {/* Ruta pública */}
+          <Route path="/" element={<Login />} />
+
+          {/* Ruta protegida */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </Router>
-    </CarritoProvider>
+    </AuthProvider>
   );
 }
 
 export default App;
-

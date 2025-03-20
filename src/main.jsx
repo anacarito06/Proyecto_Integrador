@@ -1,13 +1,13 @@
-
-import ReactDOM from "react-dom/client";
+// main.jsx
+import "react";
+import ReactDOM from "react-dom";
 import App from "./App";
-import "./index.css"; 
+import "./index.css"; // Verifica esto
 import { CarritoProvider } from "./context/CarritoContext";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
+
+ReactDOM.createRoot(document.getElementById("root")).render(
   <CarritoProvider>
     <App />
   </CarritoProvider>
 );
-

@@ -5,6 +5,9 @@ import Menu from "./pages/Menu";
 import Login from "./pages/Login";
 import Registro from "./pages/Registro";
 import { CarritoProvider } from "./context/CarritoContext";  // Importamos el proveedor del carrito
+// App.jsx o index.jsx
+import './App.css';
+
 
 function App() {
   return (

@@ -1,38 +1,58 @@
-// frontend/src/context/AuthContext.jsx
-import { createContext, useContext, useState, useEffect } from "react";
-import { auth } from "../config/firebaseConfig";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { createContext, useContext, useEffect, useState } from 'react';
+import { auth } from '../config/firebaseConfig';
+import { onAuthStateChanged } from 'firebase/auth';
+import { db } from '../config/firebaseConfig';
+import { doc, getDoc } from 'firebase/firestore';
 
 const AuthContext = createContext();
+// eslint-disable-next-line react-refresh/only-export-components
+export const useAuth = () => useContext(AuthContext);
 
 // eslint-disable-next-line react/prop-types
-export function AuthProvider({ children }) {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [role, setRole] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+  
+      if (currentUser) {
+        try {
+          const docRef = doc(db, 'usuarios', currentUser.uid);
+          const docSnap = await getDoc(docRef);
+  
+          if (docSnap.exists()) {
+            const userRole = docSnap.data().role;
+            setRole(userRole);
+            localStorage.setItem("rol", userRole); // Guardamos el rol en localStorage
+          } else {
+            setRole('cliente');
+          }
+        } catch (error) {
+          console.error("Error obteniendo rol de Firestore:", error);
+          setRole('cliente');
+        }
+      } else {
+        setRole('');
+      }
+  
       setLoading(false);
     });
-
-    return () => unsubscribe(); // Limpiar el listener al desmontar el componente
+  
+    return unsubscribe;
   }, []);
 
-  const logout = async () => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.error("Error al cerrar sesión:", error.message);
-    }
-  };
+  useEffect(() => {
+    console.log("Estado final del usuario:", user);
+    console.log("Estado final del rol:", role);
+    console.log("Estado final de carga:", loading);
+  }, [user, role, loading]);
 
   return (
-    <AuthContext.Provider value={{ user, logout }}>
-      {!loading && children}
+    <AuthContext.Provider value={{ user, role, loading }}>
+      {children}
     </AuthContext.Provider>
   );
-}
-
-// eslint-disable-next-line react-refresh/only-export-components
-export const useAuth = () => useContext(AuthContext);
+};

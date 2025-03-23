@@ -20,9 +20,6 @@ const Navbar = () => {
           <li>
             <Link to="/login" className="hover:text-yellow-500 transition duration-300">Login</Link>
           </li>
-          <li>
-            <Link to="/registro" className="hover:text-yellow-500 transition duration-300">Registro</Link>
-          </li>
         </ul>
       </div>
     </nav>

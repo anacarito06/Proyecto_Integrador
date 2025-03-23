@@ -1,22 +1,20 @@
-const admin = require("firebase-admin");
-
-const auth = admin.auth();
-
-const verificarToken = async (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1]; // Obtener el token del header
-
+// authMiddleware.js (Backend)
+const verificarAutenticacion = async (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1]; // Obtener el token Bearer
   if (!token) {
-    return res.status(401).json({ error: "No autorizado" });
+    return res.status(401).json({ message: 'No autenticado. Token no proporcionado' });
   }
-  
-  console.log("🔥 Firebase Auth:", auth);
+
   try {
-    const decodedToken = await auth.verifyIdToken(token);
+    const decodedToken = await admin.auth().verifyIdToken(token);
     req.user = decodedToken;
+
+    // Aquí verificamos el rol del usuario
+    const customClaims = decodedToken.customClaims || {};
+    req.user.role = customClaims.role || 'usuario'; // Si no tiene rol, se considera usuario normal
+
     next();
   } catch (error) {
-    return res.status(401).json({ error: "Token inválido" });
+    res.status(401).json({ message: 'Token no válido o expirado' });
   }
 };
-
-module.exports = { auth, verificarToken };

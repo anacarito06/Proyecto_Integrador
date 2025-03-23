@@ -1,13 +1,15 @@
-const { db } = require("../config/firebase");
+const { db } = require('../config/firebase');
 
-const crearPedido = async (pedido) => {
-  const nuevoPedido = await db.collection("pedidos").add(pedido);
-  return nuevoPedido.id;
-};
-
+// Obtener todos los pedidos
 const obtenerPedidos = async () => {
-  const snapshot = await db.collection("pedidos").get();
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  try {
+    const snapshot = await db.collection('pedidos').get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    throw new Error('Error al obtener pedidos');
+  }
 };
 
-module.exports = { crearPedido, obtenerPedidos };
+module.exports = {
+  obtenerPedidos,
+};

@@ -1,3 +1,4 @@
+
 import "react";
 import { useCarrito } from "../context/CarritoContext";
 
@@ -9,23 +10,16 @@ const productos = [
 ];
 
 const MenuList = () => {
-  const { carrito, agregarProducto, eliminarProducto, vaciarCarrito } = useCarrito();
+  const { carrito, agregarProducto, eliminarProducto } = useCarrito();
 
-  // Calcular el total general del carrito
-  const totalCarrito = carrito.reduce(
-    (total, item) => total + item.precio * item.cantidad,
-    0
-  );
+  // Calcular el total del carrito
+  const calcularTotal = () => {
+    return carrito.reduce((total, item) => total + item.precio * item.cantidad, 0).toFixed(2);
+  };
 
   // Función para finalizar pedido
   const finalizarPedido = () => {
-    if (carrito.length === 0) {
-      alert("Tu carrito está vacío. No puedes finalizar el pedido.");
-      return;
-    }
-
-    alert(`✅ Pedido finalizado con éxito. Total a pagar: $${totalCarrito.toFixed(2)}`);
-    vaciarCarrito(); // Vaciar el carrito después de finalizar
+    alert(`¡Pedido Finalizado! Total a pagar: $${calcularTotal()}`);
   };
 
   return (
@@ -34,20 +28,16 @@ const MenuList = () => {
         🍕 Nuestro Menú
       </h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center px-4">
         {productos.map((producto) => (
           <div key={producto.id} className="producto-card">
             <img
               src={producto.imagen}
               alt={producto.nombre}
-              className="img-producto rounded-lg shadow-md"
+              className="img-producto"
             />
-            <h2 className="text-xl font-semibold text-yellow-400 mt-4">
-              {producto.nombre}
-            </h2>
-            <p className="text-green-400 font-bold">
-              ${producto.precio.toFixed(2)}
-            </p>
+            <h2>{producto.nombre}</h2>
+            <p>${producto.precio.toFixed(2)}</p>
             <button
               onClick={() => agregarProducto(producto)}
               className="mt-3 bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg w-full"
@@ -58,37 +48,29 @@ const MenuList = () => {
         ))}
       </div>
 
-      {/* Sección de Carrito */}
+      {/* Carrito de Compras */}
       <div className="bg-gray-800 text-yellow-400 p-4 rounded-lg mt-6 shadow-lg">
         <h3 className="text-2xl font-bold mb-3">🛒 Carrito de Compras:</h3>
         {carrito.length > 0 ? (
           <>
             <ul>
               {carrito.map((item, index) => (
-                <li
-                  key={index}
-                  className="flex justify-between items-center mb-2 text-white"
-                >
-                  <div>
-                    <span className="font-semibold">{item.nombre}</span> - 
-                    Cantidad: {item.cantidad} - 
-                    Subtotal: ${parseFloat(item.precio * item.cantidad).toFixed(2)}
-                  </div>
+                <li key={index} className="flex justify-between items-center mb-2">
+                  <span className="font-semibold">{item.nombre} x {item.cantidad}</span>
+                  <span className="text-green-400 font-bold">${(item.precio * item.cantidad).toFixed(2)}</span>
                   <button
                     onClick={() => eliminarProducto(item.id)}
-                    className="bg-red-500 hover:bg-red-400 text-white px-2 py-1 rounded-lg ml-2"
+                    className="bg-red-500 hover:bg-red-400 text-white px-2 py-1 rounded-lg"
                   >
                     Eliminar
                   </button>
                 </li>
               ))}
             </ul>
-            <p className="text-yellow-300 font-semibold mt-3">
-              Total: ${totalCarrito.toFixed(2)}
-            </p>
+            <h4 className="mt-4 text-xl font-semibold">Total: ${calcularTotal()}</h4>
             <button
               onClick={finalizarPedido}
-              className="mt-4 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg w-full"
+              className="mt-3 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg w-full"
             >
               Finalizar Pedido
             </button>
@@ -102,3 +84,4 @@ const MenuList = () => {
 };
 
 export default MenuList;
+
